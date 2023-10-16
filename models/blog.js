@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { slugify } = require("../utils/slugify");
 
 const blogSchema = mongoose.Schema({
     title: { type: String, trim: true, required: true, },
@@ -10,7 +9,6 @@ const blogSchema = mongoose.Schema({
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true }],
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
     status: { type: String, required: true, enum: ["Draft", "Published"] },
-    visibility: { type: String, required: true, enum: ["Public", "Private"] }
 }, { timestamps: true });
 
 blogSchema.index({ name: "text" });

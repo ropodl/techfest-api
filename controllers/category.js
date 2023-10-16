@@ -29,12 +29,12 @@ exports.all = async (req, res) => {
     const result = await CategoryScheme.find()
         .sort({ createdAt: "-1" })
         .skip(page * itemsPerPage)
-        .limit(page===-1?itemsPerPage:0);
+        .limit(page === -1 ? 0 : itemsPerPage);
     const categories = result.map((category) => {
         const { title, slug, description } = category;
         return {
             title, slug, description,
         };
     });
-    res.json({ categories, pagination: { totalPage:Math.ceil(categoryCount / itemsPerPage), totalItems: categoryCount, itemsPerPage, currentPage:page+1} });
+    res.json({ categories, pagination: { totalPage: Math.ceil(categoryCount / itemsPerPage), totalItems: categoryCount, itemsPerPage, currentPage: page + 1 } });
 };

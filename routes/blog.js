@@ -21,4 +21,4 @@ router.get("/:slug", blog)
 router.delete("/delete-bulk", isAuth, isAdmin, removeBulk)
 router.delete("/:id", isAuth, isAdmin, remove)
 
-module.exports = router
+module.exports = router;

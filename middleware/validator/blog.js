@@ -6,8 +6,5 @@ exports.blogValidator = [
     check("excerpt").trim().notEmpty().withMessage("Excerpt is missing"),
     check("status")
         .isIn(["Draft", "Published"])
-        .withMessage("Status must be private or public"),
-    check("visibility")
-        .isIn(["Public", "Private"])
-        .withMessage("visibility must be public or private")
+        .withMessage("Status must be private or public")
 ]
