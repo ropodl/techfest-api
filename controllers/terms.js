@@ -4,6 +4,9 @@ const { sendError } = require("../utils/error");
 exports.create = async (req, res) => {
     const { content, status } = req.body;
 
+    const oldTerms = await TermsSchema.findOne({});
+    if (oldTerms) return sendError(res, "Terms and Condition already exists");
+
     const terms = new TermsSchema({ content, status });
 
     console.log(terms)
@@ -31,6 +34,5 @@ exports.update = async (req, res) => {
 exports.terms = async (req, res) => {
     const terms = await TermsSchema.findOne();
     if (!terms) return sendError(res, "Terms and Conditions not found", 404)
-
-    res.json(terms)
+    res.json(terms);
 }

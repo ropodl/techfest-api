@@ -1,18 +1,22 @@
 const { isValidObjectId } = require("mongoose");
 const BlogSchema = require("../models/blog");
 const { sendError } = require("../utils/error");
+const { paginate } = require("../utils/paginate");
+const { slugify } = require("../utils/slugify")
 
 exports.create = async (req, res) => {
-    const { title, content, excerpt, categories, slug, status } = req.body;
+    const { title, content, excerpt, categories, status } = req.body;
     const { file } = req;
 
-    let featuredImage = {
+    const featuredImage = {
         url: (process.env.app_dev ? "http://" : "https://") + req.hostname + (process.env.app_port ? `:${process.env.app_port}` : '') + "/" + file.path,
         name: file.filename
     }
 
+    const slug = await slugify(title, BlogSchema);
+
     const blog = new BlogSchema({
-        title, content, excerpt, slug, categories, status, featuredImage
+        title, content, slug, excerpt, categories, status, featuredImage
     })
 
     if (categories) {
@@ -33,7 +37,7 @@ exports.create = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-    const { title, content, excerpt, categories, slug, status, visibility } = req.body;
+    const { title, content, excerpt, categories, status } = req.body;
     const { id } = req.params;
     const { file } = req;
 
@@ -49,12 +53,12 @@ exports.update = async (req, res) => {
         blog.categories = categories.split(",")
     } else return sendError(res, "No Category selected");
 
+    if (title !== blog.title) blog.slug = await slugify(title, BlogSchema);
+
     blog.title = title;
     blog.content = content;
     blog.excerpt = excerpt;
-    if (blog.slug !== slug) blog.slug = slug;
     blog.status = status;
-    blog.visibility = visibility;
 
     if (file) blog.featuredImage = {
         url: (process.env.app_dev ? "http://" : "https://") + req.hostname + (process.env.app_port ? `:${process.env.app_port}` : '') + "/" + file.path,
@@ -69,49 +73,24 @@ exports.update = async (req, res) => {
 exports.blog = async (req, res) => {
     const { slug } = req.params;
 
-    const blog = await BlogSchema.findOne({ slug }).populate({ path: "categories", select: ["title", "slug"] });
+    const blog = await BlogSchema.findOne({ slug }).populate({ path: "categories", select: ["title slug"] });
     if (!blog) return sendError(res, "Invalid request, Blog not found", 404)
 
     res.json({ blog });
 }
 
-exports.latest = async (req, res) => {
-    const result = await BlogSchema.find().sort({ createdAt: "-1" }).limit(10);
-    const blogs = result.map((blog) => {
-        const { id, title, content, status, slug, visibility, featuredImage } = blog;
-        return {
-            id, title, content, status, slug, visibility, featuredImage
-        };
-    });
-    res.json(blogs);
-}
-
 exports.all = async (req, res) => {
-    const itemsPerPage = parseInt(req.query.per_page) || 10;
-    const page = parseInt(req.query.page) - 1 || 0;
+    const itemsPerPage = parseInt(req.query.per_page) === -1 ? 0 : parseInt(req.query.per_page) || 10;
+    const page = parseInt(req.query.page) || 0;
 
-    const blogCount = await BlogSchema.countDocuments();
-    const result = await BlogSchema.find()
-        .populate({ path: "categories", select: ["title", "slug"] })
-        .sort({ createdAt: "-1" })
-        .skip(page * itemsPerPage)
-        .limit(page === -1 ? 0 : itemsPerPage);
-    console.log('test' + itemsPerPage)
-    const blogs = result.map((blog) => {
-        const { id, title, excerpt, status, visibility, featuredImage, categories, slug } = blog;
-        return {
-            id, title, excerpt, status, visibility, featuredImage, categories, slug
-        };
-    });
+    const paginatedBlog = await paginate(BlogSchema, page, itemsPerPage, {}, { createdAt: "-1" })
 
-    const pagination = {
-        totalPage: Math.ceil(blogCount / itemsPerPage),
-        totalItems: blogCount,
-        itemsPerPage,
-        currentPage: page + 1
-    }
-    // blogs.populate("categories")
-    res.json({ blogs, pagination });
+    const blogs = await Promise.all(paginatedBlog.documents.map(async (blog) => {
+        await blog.populate({ path: "categories", select: "title slug" });
+        const { id, title, slug, excerpt, featuredImage, categories, status, createdAt, updatedAt } = blog;
+        return { id, title, slug, excerpt, featuredImage, categories, status, createdAt, updatedAt }
+    }))
+    res.json({ blogs, pagination: paginatedBlog.pagination });
 }
 
 exports.remove = async (req, res) => {

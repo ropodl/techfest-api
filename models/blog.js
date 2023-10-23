@@ -7,7 +7,6 @@ const blogSchema = mongoose.Schema({
     content: { type: String, trim: true, required: true },
     featuredImage: { type: Object, url: String, name: String },
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true }],
-    tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tag" }],
     status: { type: String, required: true, enum: ["Draft", "Published"] },
 }, { timestamps: true });
 

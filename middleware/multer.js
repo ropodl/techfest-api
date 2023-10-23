@@ -36,5 +36,13 @@ const videoFileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
+const documentFileFilter = () => {
+    if (!file.mimetype.startsWith("document")) {
+        cb("Supports only document files", false);
+    }
+    cb(null, true);
+}
+
 exports.uploadImage = multer({ storage, imageFileFilter, limits: { fieldSize: 1000000000 } });
 exports.uploadVideo = multer({ storage, videoFileFilter });
+exports.uploadDocument = multer({ storage, documentFileFilter });

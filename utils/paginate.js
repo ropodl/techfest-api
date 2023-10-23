@@ -25,7 +25,7 @@ exports.paginate = async (model, page, itemsPerPage, query, sort) => {
     const documents = await model.find(query)
         .sort(sort)
         .skip(offset)
-        .limit(itemsPerPage);
+        .limit(itemsPerPage)
 
     // Return the paginated list of documents
     return {

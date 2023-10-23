@@ -7,6 +7,7 @@ const categoryRoute = require("./category")
 const speakerRoute = require("./speaker")
 const termsRoute = require("./terms")
 const contactRequestRoute = require("./contactRequest")
+const resourceRoute = require("./resource")
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use("/category", categoryRoute);
 router.use("/speaker", speakerRoute);
 router.use("/terms", termsRoute);
 router.use("/contact-request", contactRequestRoute);
+router.use("/resource", resourceRoute);
 
 module.exports = router;

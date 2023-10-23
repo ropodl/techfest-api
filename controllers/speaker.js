@@ -41,7 +41,6 @@ exports.update = async (req, res) => {
 };
 
 exports.all = async (req, res) => {
-  // const itemsPerPage = parseInt(req.query.per_page) || 10;
   const itemsPerPage = parseInt(req.query.per_page) === -1 ? 0 : parseInt(req.query.per_page) || 10;
   const page = parseInt(req.query.page) || 0;
 
@@ -50,9 +49,6 @@ exports.all = async (req, res) => {
   const speakers = paginatedSpeaker.documents.map(({ id, speakerImage, name, position, description }) => {
     return { id, speakerImage, name, position, description }
   })
-
-  // console.log(paginatedSpeaker)
-
   res.json({ speakers, pagination: paginatedSpeaker.pagination });
 }
 
