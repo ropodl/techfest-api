@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { sendError } = require("../utils/error");
-const UserSchema = require("../models/user");
+const AdminSchema = require("../models/admin");
 
 exports.isAuth = async (req, res, next) => {
     const authHeader = req.headers?.authorization;
@@ -12,17 +12,15 @@ exports.isAuth = async (req, res, next) => {
     try {
         const decode = jwt.verify(token, process.env.app_jwt_secret);
         const { userId } = decode;
-        const user = await UserSchema.findById(userId);
+        const user = await AdminSchema.findById(userId);
         if (!user) return sendError(res, "Invalid Token, User not found", 404);
 
         req.user = user;
         next();
-
     } catch (error) {
         console.log(error)
         return res.status(401).json({ message: "Token Expired" })
     }
-
 };
 
 exports.isAdmin = async (req, res, next) => {

@@ -1,7 +1,7 @@
 const express = require("express");
 
 const { isAuth, isAdmin } = require("../middleware/auth");
-const { latest, create, remove, blog, all, search, removeBulk, update } = require("../controllers/blog");
+const { create, remove, blog, all, search, removeBulk, update } = require("../controllers/blog");
 const { uploadImage } = require("../middleware/multer");
 
 const { blogValidator } = require("../middleware/validator/blog");

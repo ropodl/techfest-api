@@ -15,7 +15,6 @@ exports.create = async (req, res) => {
 exports.all = async (req, res) => {
     const itemsPerPage = parseInt(req.query.per_page) || 10;
     const page = parseInt(req.query.page) - 1 || 0;
-    console.log(req.query)
 
     const contactFormCount = await ContactFormSchema.countDocuments();
     const result = await ContactFormSchema.find()

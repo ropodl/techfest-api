@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-const UserSchema = require("../models/user");
+const AdminSchema = require("../models/admin");
 const { sendError } = require("../utils/error");
 
 exports.create = async (req, res) => {
-    const oldUser = await UserSchema.findOne({ email: "sarox14@gmail.com" });
+    const oldUser = await AdminSchema.findOne({ email: "sarox14@gmail.com" });
     if (oldUser) return sendError(res, "Path Not Found", 404);
-    const user = new UserSchema({ name: "Saroj Poudel", email: "sarox14@gmail.com", password: process.env.admin_pass, role: "admin" });
+    const user = new AdminSchema({ name: "Saroj Poudel", email: "sarox14@gmail.com", password: process.env.admin_pass, role: "admin" });
     await user.save();
 
     res.status(200).json(
@@ -25,7 +25,7 @@ exports.create = async (req, res) => {
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await UserSchema.findOne({ email });
+    const user = await AdminSchema.findOne({ email });
     if (!user) return sendError(res, "Email/Password do not match");
 
     const matched = await user.comparePassword(password);
@@ -34,9 +34,9 @@ exports.login = async (req, res) => {
     const { id, name, role } = user;
 
     const token = jwt.sign({ userId: user._id }, process.env.app_jwt_secret
-    //, {
-    //    expiresIn: "1d",
-    //}
+        //, {
+        //    expiresIn: "1d",
+        //}
     );
 
     res.json({
