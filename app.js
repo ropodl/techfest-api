@@ -3,17 +3,15 @@ const helmet = require('helmet');
 const morgan = require("morgan");
 const cors = require("cors");
 const compression = require('compression');
+const all_routes = require('express-list-endpoints');
 
 require("express-async-errors");
 
-
-// const { ErrorResponseObject } = require('./common/http');
 const { errorHandler, handleNotFound } = require("./middleware/errorHandler");
 const routes = require('./routes');
 
 require("dotenv").config();
 require("./config/db.js")
-// require("./config/app.js")
 
 const app = express();
 
@@ -24,11 +22,14 @@ app.use(express.json());
 app.use(helmet());
 app.use(compression({ level: 9 }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-// app.use(express.json({ limit: '50mb' }));
 
 app.use('/api/v1', routes);
 app.get("/api/v1/test", (req, res) => {
     res.json("test")
+});
+app.get("/get-all-routes", (req, res) => {
+    console.log(all_routes(app))
+    res.json("Open console to see all routes");
 })
 
 // default catch all handler

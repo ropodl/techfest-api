@@ -50,5 +50,17 @@ exports.all = async (req, res) => {
     return { id, speakerImage, name, position, description }
   })
   res.json({ speakers, pagination: paginatedSpeaker.pagination });
-}
+};
 
+exports.remove = async (req, res) => {
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) return sendError(res, "Invalid Speaker ID")
+
+  const speaker = SpeakerSchema.findById(id)
+  if (!speaker) return sendError(res, "Speaker not found", 404);
+
+  await SpeakerSchema.findByIdAndDelete(id)
+
+  res.json({ message: "Speaker removed successfully" });
+}

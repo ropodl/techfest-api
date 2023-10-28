@@ -1,5 +1,5 @@
 {
-  "name": "techfestApi",
+  "name": "tech-fest-api",
   "version": "0.5.0",
   "description": "express vercel boilerplate",
   "main": "app.js",
@@ -14,6 +14,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
+    "express-list-endpoints": "^6.0.0",
     "express-validator": "^7.0.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^9.0.2",
@@ -21,9 +22,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.5",
-    "nodemon": "^3.0.1",
-    "passport": "^0.6.0",
-    "passport-github2": "^0.1.12"
+    "nodemon": "^3.0.1"
   },
   "keywords": [
     "vercel"

@@ -10,16 +10,19 @@ const contactRequestRoute = require("./contactRequest")
 const resourceRoute = require("./resource")
 const teamRoute = require("./team")
 
+const frontendRoute = require("./frontend")
+
 const router = express.Router();
 
 // Frontend Routes
-router.use("/", homeRoute);
+router.use("/", frontendRoute);
 
 // User End Routes
 
 // Admin/Dashboard End Routes
 
 // Both End
+router.use("/home", homeRoute);
 router.use("/login", adminRoute);
 router.use("/blog", blogRoute);
 router.use("/category", categoryRoute);
