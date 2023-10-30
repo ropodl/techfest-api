@@ -5,7 +5,8 @@ const sponsorSchema = mongoose.Schema({
     sponsorImage: { type: Object, url: String, name: String },
     level: { type: String, trim: true, required: true, unique: true },
     link: { type: String, trim: true },
-    info: { type: String, trim: true, required: true },
+    description: { type: String, trim: true, required: true },
+    perks: { type: String, trim: true, required: true },
     status: { type: String, required: true, enum: ["Draft", "Published"] },
 }, { timestamps: true });
 

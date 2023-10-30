@@ -1,8 +1,10 @@
 const express = require("express")
 
-const { findOrCreate } = require("../controllers/frontend/user")
+const { findOrCreate, home } = require("../controllers/frontend/user")
 
 const router = express.Router();
+
+router.get("/home", home)
 
 router.post('/user/find-or-create', findOrCreate);
 

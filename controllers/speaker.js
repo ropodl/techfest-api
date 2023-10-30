@@ -1,3 +1,4 @@
+const { isValidObjectId } = require("mongoose");
 const SpeakerSchema = require("../models/speaker");
 const { paginate } = require("../utils/paginate");
 

@@ -21,3 +21,7 @@ exports.findOrCreate = async (req, res) => {
     const token = jwt.sign({ userId: id }, process.env.app_jwt_secret);
     return res.json({ token, user: { id, name, email, image } })
 };
+
+exports.home = async (req, res) => {
+    console.log(req);
+}
