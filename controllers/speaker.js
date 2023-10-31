@@ -1,9 +1,10 @@
 const { isValidObjectId } = require("mongoose");
 const SpeakerSchema = require("../models/speaker");
 const { paginate } = require("../utils/paginate");
+const { sendError } = require("../utils/error");
 
 exports.create = async (req, res) => {
-  const { name, position, description } = req.body;
+  const { name, position, description, facebook, twitter, status } = req.body;
   const { file } = req;
 
   let speakerImage = {
@@ -11,20 +12,21 @@ exports.create = async (req, res) => {
     name: file.filename
   }
 
-  const speaker = new SpeakerSchema({ name, position, description, speakerImage });
+  const speaker = new SpeakerSchema({ name, position, description, speakerImage, facebook, twitter, status });
 
   await speaker.save();
 
   res.json({
     success: true,
     speaker: {
-      name, position, description, speakerImage
+      id: speaker._id,
+      name, position, description, speakerImage, facebook, twitter, status
     }
   })
 };
 
 exports.update = async (req, res) => {
-  const { name, position, description } = req.body;
+  const { name, position, description, facebook, twitter, status } = req.body;
   const { id } = req.params;
 
   if (!isValidObjectId(id)) return sendError(res, "Speaker ID not valid");
@@ -35,20 +37,34 @@ exports.update = async (req, res) => {
   speaker.name = name;
   speaker.position = position;
   speaker.description = description;
+  speaker.facebook = facebook;
+  speaker.twitter = twitter;
+  speaker.status = status;
 
   await blog.save();
 
   res.json({ success: true, message: "Speaker updated successfully" });
 };
 
+exports.speaker = async (req, res) => {
+  const { id } = req.params;
+
+  const speaker = await SpeakerSchema.findOne({ _id: id });
+  if (!speaker) return sendError(res, "Invalid request, Speaker not found", 404)
+
+  const { _id, name, position, description, speakerImage, status, facebook, twitter } = speaker;
+
+  res.json({ id: _id, name, position, description, speakerImage, status, facebook, twitter });
+}
+
 exports.all = async (req, res) => {
   const itemsPerPage = parseInt(req.query.per_page) === -1 ? 0 : parseInt(req.query.per_page) || 10;
   const page = parseInt(req.query.page) || 0;
 
-  const paginatedSpeaker = await paginate(SpeakerSchema, page, itemsPerPage)
+  const paginatedSpeaker = await paginate(SpeakerSchema, page, itemsPerPage, {}, { createdAt: '-1' })
 
-  const speakers = paginatedSpeaker.documents.map(({ id, speakerImage, name, position, description }) => {
-    return { id, speakerImage, name, position, description }
+  const speakers = paginatedSpeaker.documents.map(({ id, speakerImage, name, position, description, facebook, twitter, status }) => {
+    return { id, speakerImage, name, position, description, facebook, twitter, status }
   })
   res.json({ speakers, pagination: paginatedSpeaker.pagination });
 };

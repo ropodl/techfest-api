@@ -54,5 +54,5 @@ exports.removeBulk = async (req, res) => {
             await CategoryScheme.findByIdAndDelete(id)
         }
     }
-    res.json({ success: true, message: "Multiple Blogs Deleted" })
+    res.json({ success: true, message: "Multiple Blog Categories Deleted" })
 };

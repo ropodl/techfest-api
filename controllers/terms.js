@@ -3,6 +3,7 @@ const { sendError } = require("../utils/error");
 
 exports.get = async (req, res) => {
     const terms = await TermsSchema.findOne();
+    if (!terms) return res.json({ content: "", status: "Draft" })
     res.json({ id: terms.id, content: terms.content, status: terms.status });
 }
 

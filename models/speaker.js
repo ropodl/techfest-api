@@ -1,10 +1,13 @@
 const mongoose = require("mongoose")
 
 const speakerSchema = mongoose.Schema({
-  name: { type:String,trim:true,required:true },
-  position: { type:String,trim:true,required:true },
-  description: { type:String,trim:true,required:true },
+  name: { type: String, trim: true, required: true },
+  position: { type: String, trim: true, required: true },
+  description: { type: String, trim: true },
   speakerImage: { type: Object, url: String, name: String },
-}, { timestamps:true });
+  facebook: { type: String, trim: true },
+  twitter: { type: String, trim: true },
+  status: { type: String, required: true, enum: ["Draft", "Published"] },
+}, { timestamps: true });
 
-module.exports = mongoose.model("Speaker",speakerSchema);
+module.exports = mongoose.model("Speaker", speakerSchema);

@@ -3,6 +3,7 @@ const { sendError } = require("../utils/error");
 
 exports.get = async (req, res) => {
     const privacy = await PrivacySchema.findOne();
+    if (!privacy) return res.json({ content: "", status: "Draft" })
     res.json({ id: privacy.id, content: privacy.content, status: privacy.status });
 }
 

@@ -16,7 +16,7 @@ const frontendRoute = require("./frontend")
 const router = express.Router();
 
 // Frontend Routes
-router.use("/", frontendRoute);
+router.use("/frontend", frontendRoute);
 
 // User End Routes
 
