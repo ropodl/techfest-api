@@ -1,7 +1,7 @@
 const express = require("express");
 
 const { isAuth, isAdmin } = require("../middleware/auth");
-const { get, update, create } = require("../controllers/terms");
+const { get, update, create } = require("../controllers/privacy");
 
 const router = express.Router();
 

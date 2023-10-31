@@ -1,36 +1,33 @@
-const TermsSchema = require("../models/terms");
+const PrivacySchema = require("../models/privacy");
 const { sendError } = require("../utils/error");
+
+exports.get = async (req, res) => {
+    const privacy = await PrivacySchema.findOne();
+    res.json({ id: privacy.id, content: privacy.content, status: privacy.status });
+}
 
 exports.create = async (req, res) => {
     const { content, status } = req.body;
 
-    const terms = new TermsSchema({ content, status });
+    const oldPrivacy = await PrivacySchema.findOne();
+    if (oldPrivacy) return sendError(res, "Privacy Policy already created");
 
-    console.log(terms)
+    const privacy = new PrivacySchema({ content, status });
 
-    await terms.save();
+    await privacy.save();
 
-    res.json({ success: true, terms })
-}
+    res.json({ success: true, privacy: { id: privacy.id, content: privacy.content, status: privacy.status } });
+};
 
 exports.update = async (req, res) => {
     const { content, status } = req.body;
 
-    const terms = await TermsSchema.findOne();
+    const privacy = await PrivacySchema.findOne();
 
-    if (!terms) return sendError(res, "Terms and Conditions not found", 404);
+    privacy.content = content;
+    privacy.status = status;
 
-    terms.content = content;
-    terms.status = status;
+    await privacy.save();
 
-    await terms.save();
-
-    res.json({ success: true, terms, message: "Terms and Conditions updated successfully" })
-}
-
-exports.terms = async (req, res) => {
-    const terms = await TermsSchema.findOne();
-    if (!terms) return sendError(res, "Terms and Conditions not found", 404)
-
-    res.json(terms)
-}
+    res.json({ success: true, privacy: { id: privacy.id, content: privacy.content, status: privacy.status } })
+};

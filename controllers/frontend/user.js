@@ -24,4 +24,5 @@ exports.findOrCreate = async (req, res) => {
 
 exports.home = async (req, res) => {
     console.log(req);
+    res.json({ message: "Test is test" })
 }

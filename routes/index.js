@@ -6,6 +6,7 @@ const blogRoute = require("./blog")
 const categoryRoute = require("./category")
 const speakerRoute = require("./speaker")
 const termsRoute = require("./terms")
+const privacyRoute = require("./privacy")
 const contactRequestRoute = require("./contactRequest")
 const resourceRoute = require("./resource")
 const teamRoute = require("./team")
@@ -28,6 +29,7 @@ router.use("/blog", blogRoute);
 router.use("/category", categoryRoute);
 router.use("/speaker", speakerRoute);
 router.use("/terms", termsRoute);
+router.use("/privacy", privacyRoute);
 router.use("/contact-request", contactRequestRoute);
 router.use("/resource", resourceRoute);
 router.use("/team", teamRoute);
