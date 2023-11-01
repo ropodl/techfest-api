@@ -10,6 +10,7 @@ const privacyRoute = require("./privacy")
 const contactRequestRoute = require("./contactRequest")
 const resourceRoute = require("./resource")
 const teamRoute = require("./team")
+const sponsorRoute = require("./sponsor")
 
 const frontendRoute = require("./frontend")
 
@@ -33,5 +34,6 @@ router.use("/privacy", privacyRoute);
 router.use("/contact-request", contactRequestRoute);
 router.use("/resource", resourceRoute);
 router.use("/team", teamRoute);
+router.use("/sponsor", sponsorRoute);
 
 module.exports = router;

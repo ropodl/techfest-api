@@ -1,5 +1,6 @@
 const { isValidObjectId } = require("mongoose");
 const SponsorSchema = require("../models/sponsor");
+const { paginate } = require("../utils/paginate");
 
 exports.create = async (req, res) => {
     const { name, level, link, description, perks, status } = req.body;
@@ -14,7 +15,7 @@ exports.create = async (req, res) => {
 
     await sponsor.save();
 
-    res.json({ success: true })
+    res.json({ success: true, message: "Sponsor added successfully" })
 };
 
 exports.update = async (req, res) => {
@@ -42,4 +43,55 @@ exports.update = async (req, res) => {
     await sponsor.save();
 
     res.json({ success: true, message: "Sponsor updated successfully" });
+};
+
+exports.sponsor = async (req, res) => {
+    const { id } = req.params;
+
+    const sponsor = await SponsorSchema.findOne({ id });
+    if (!sponsor) return sendError(res, "Invalid request, Sponsor not found", 404)
+
+    res.json(sponsor);
+}
+
+exports.all = async (req, res) => {
+    const itemsPerPage = parseInt(req.query.per_page) === -1 ? 0 : parseInt(req.query.per_page) || 10;
+    const page = parseInt(req.query.page) || 0;
+
+    const paginatedSponsor = await paginate(SponsorSchema, page, itemsPerPage, {}, { createdAt: "-1" })
+
+    const sponsors = await Promise.all(paginatedSponsor.documents.map(async (sponsor) => {
+        // await sponsor.populate({ path: "categories", select: "title slug" });
+        const { id, name, sponsorImage, level, link, description, perks, status } = sponsor;
+        return { id, name, sponsorImage, level, link, description, perks, status }
+    }))
+    res.json({ sponsors, pagination: paginatedSponsor.pagination });
+}
+
+exports.remove = async (req, res) => {
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) return sendError(res, "Invalid Sponsor ID")
+
+    const sponsor = SponsorSchema.findById(id)
+    if (!sponsor) return sendError(res, "Sponsor not found", 404);
+
+    await SponsorSchema.findByIdAndDelete(id)
+
+    res.json({ message: "Sponsor removed successfully" });
+}
+exports.removeBulk = async (req, res) => {
+    const { ids } = req.body;
+    console.log(ids);
+    if (ids) {
+        for (id of ids) {
+            if (!isValidObjectId(id)) return sendError(res, "Invalid Sponsor ID")
+
+            const sponsor = SponsorSchema.findById(id)
+            if (!sponsor) return sendError(res, "Sponsor not found", 404);
+
+            await SponsorSchema.findByIdAndDelete(id)
+        }
+    }
+    res.json({ message: "Multiple Sponsors Deleted" })
 }
