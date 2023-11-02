@@ -1,6 +1,6 @@
 const express = require("express")
 
-const homeRoute = require("./home")
+const dashboardRoute = require("./dashboard")
 const adminRoute = require("./admin")
 const blogRoute = require("./blog")
 const categoryRoute = require("./category")
@@ -11,6 +11,7 @@ const contactRequestRoute = require("./contactRequest")
 const resourceRoute = require("./resource")
 const teamRoute = require("./team")
 const sponsorRoute = require("./sponsor")
+const workshopRoute = require("./workshop")
 
 const frontendRoute = require("./frontend")
 
@@ -24,7 +25,7 @@ router.use("/frontend", frontendRoute);
 // Admin/Dashboard End Routes
 
 // Both End
-router.use("/home", homeRoute);
+router.use("/dashboard", dashboardRoute);
 router.use("/login", adminRoute);
 router.use("/blog", blogRoute);
 router.use("/category", categoryRoute);
@@ -35,5 +36,6 @@ router.use("/contact-request", contactRequestRoute);
 router.use("/resource", resourceRoute);
 router.use("/team", teamRoute);
 router.use("/sponsor", sponsorRoute);
+router.use("/workshop", workshopRoute);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const SpeakerSchema = require("../../models/speaker");
+const WorkshopSchema = require("../../models/workshop");
 const { paginate } = require("../../utils/paginate");
 
 exports.home = async (req, res) => {
@@ -11,4 +12,9 @@ exports.home = async (req, res) => {
         };
     }))
     res.json({ speakers })
-}
+};
+
+exports.workshop = async (req, res) => {
+    const workshops = await WorkshopSchema.find({});
+    res.json(workshops);
+};
