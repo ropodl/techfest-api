@@ -1,3 +1,4 @@
+const { isValidObjectId } = require("mongoose");
 const ContactFormSchema = require("../models/contactRequest")
 
 exports.create = async (req, res) => {
@@ -10,7 +11,7 @@ exports.create = async (req, res) => {
     await request.save();
 
     res.json({ success: true })
-}
+};
 
 exports.all = async (req, res) => {
     const itemsPerPage = parseInt(req.query.per_page) || 10;
@@ -34,7 +35,35 @@ exports.all = async (req, res) => {
         itemsPerPage,
         currentPage: page + 1
     }
-    // console.log(itemsPerPage)
-    // blogs.populate("categories")
+
     res.json({ requests, pagination });
-}
+};
+
+exports.remove = async (req, res) => {
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) return sendError(res, "Invalid Contact Request ID")
+
+    const request = ContactFormSchema.findById(id)
+    if (!request) return sendError(res, "Contact Request not found", 404);
+
+    await ContactFormSchema.findByIdAndDelete(id)
+
+    res.json({ message: "Contact Request removed successfully" });
+};
+
+exports.removeBulk = async (req, res) => {
+    const { ids } = req.body;
+    
+    if (ids) {
+        for (id of ids) {
+            if (!isValidObjectId(id)) return sendError(res, "Invalid Contact Request ID")
+
+            const request = ContactFormSchema.findById(id)
+            if (!request) return sendError(res, "Contact Request not found", 404);
+
+            await ContactFormSchema.findByIdAndDelete(id)
+        }
+    }
+    res.json({ message: "Multiple Contact Request Deleted" })
+};

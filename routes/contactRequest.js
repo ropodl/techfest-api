@@ -1,8 +1,9 @@
 const express = require("express");
 
-const { create, all } = require("../controllers/contactRequest");
+const { create, all, removeBulk, remove } = require("../controllers/contactRequest");
 const { contactRequestValidator } = require("../middleware/validator/contactRequest")
 const { validate } = require("../middleware/validator/validate")
+const { isAuth,isAdmin } = require("../middleware/auth")
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post("/create", contactRequestValidator, validate, create);
 router.get("/", all)
 // router.get("/:slug", blog)
 
-// router.delete("/delete-bulk", isAuth, isAdmin, removeBulk)
-// router.delete("/:id", isAuth, isAdmin, remove)
+router.delete("/delete-bulk", isAuth, isAdmin, removeBulk)
+router.delete("/:id", isAuth, isAdmin, remove)
 
 module.exports = router;
