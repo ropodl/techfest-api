@@ -6,7 +6,7 @@ exports.create = async (req, res) => {
 
     const request = new ContactFormSchema({
         name, phone, email, subject, message
-    })
+    });
 
     await request.save();
 
@@ -65,5 +65,5 @@ exports.removeBulk = async (req, res) => {
             await ContactFormSchema.findByIdAndDelete(id)
         }
     }
-    res.json({ message: "Multiple Contact Request Deleted" })
+    res.json({ message: "Multiple Contact Request Deleted" });
 };

@@ -76,7 +76,7 @@ exports.blog = async (req, res) => {
     const blog = await BlogSchema.findOne({ slug }).populate({ path: "categories", select: ["title slug"] });
     if (!blog) return sendError(res, "Invalid request, Blog not found", 404)
 
-    res.json({ blog });
+    res.json(blog);
 }
 
 exports.all = async (req, res) => {

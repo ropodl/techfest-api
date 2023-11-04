@@ -32,7 +32,7 @@ exports.update = async (req, res) => {
   if (!isValidObjectId(id)) return sendError(res, "Speaker ID not valid");
 
   const speaker = await SpeakerSchema.findById(id);
-  if (!blog) return sendError(res, "Speaker not found", 404);
+  if (!speaker) return sendError(res, "Speaker not found", 404);
 
   speaker.name = name;
   speaker.position = position;
@@ -41,7 +41,7 @@ exports.update = async (req, res) => {
   speaker.twitter = twitter;
   speaker.status = status;
 
-  await blog.save();
+  await speaker.save();
 
   res.json({ success: true, message: "Speaker updated successfully" });
 };

@@ -12,6 +12,7 @@ const resourceRoute = require("./resource")
 const teamRoute = require("./team")
 const sponsorRoute = require("./sponsor")
 const workshopRoute = require("./workshop")
+const prizeRoute = require("./prize")
 
 const frontendRoute = require("./frontend")
 
@@ -37,5 +38,6 @@ router.use("/resource", resourceRoute);
 router.use("/team", teamRoute);
 router.use("/sponsor", sponsorRoute);
 router.use("/workshop", workshopRoute);
+router.use("/prize", prizeRoute);
 
 module.exports = router;
