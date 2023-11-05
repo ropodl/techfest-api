@@ -4,7 +4,7 @@ const { paginate } = require("../utils/paginate");
 const { sendError } = require("../utils/error");
 
 exports.create = async (req, res) => {
-  const { name, position, description, facebook, twitter, status } = req.body;
+  const { name, position, description, facebook, twitter,linkedin, status } = req.body;
   const { file } = req;
 
   let speakerImage = {
@@ -12,21 +12,19 @@ exports.create = async (req, res) => {
     name: file.filename
   }
 
-  const speaker = new SpeakerSchema({ name, position, description, speakerImage, facebook, twitter, status });
+  const speaker = new SpeakerSchema({ name, position, description, speakerImage, facebook, twitter,linkedin, status });
 
-  await speaker.save();
+  const {id} = await speaker.save();
 
   res.json({
+    id,
     success: true,
-    speaker: {
-      id: speaker._id,
-      name, position, description, speakerImage, facebook, twitter, status
-    }
+    message: "Speaker add successfully",
   })
 };
 
 exports.update = async (req, res) => {
-  const { name, position, description, facebook, twitter, status } = req.body;
+  const { name, position, description, facebook, twitter,linkedin, status } = req.body;
   const { id } = req.params;
 
   if (!isValidObjectId(id)) return sendError(res, "Speaker ID not valid");
@@ -39,6 +37,7 @@ exports.update = async (req, res) => {
   speaker.description = description;
   speaker.facebook = facebook;
   speaker.twitter = twitter;
+  speaker.linkedin = linkedin;
   speaker.status = status;
 
   await speaker.save();
@@ -52,9 +51,9 @@ exports.speaker = async (req, res) => {
   const speaker = await SpeakerSchema.findOne({ _id: id });
   if (!speaker) return sendError(res, "Invalid request, Speaker not found", 404)
 
-  const { _id, name, position, description, speakerImage, status, facebook, twitter } = speaker;
+  const { _id, name, position, description, speakerImage, status, facebook, twitter,linkedin } = speaker;
 
-  res.json({ id: _id, name, position, description, speakerImage, status, facebook, twitter });
+  res.json({ id: _id, name, position, description, speakerImage, status, facebook, twitter,linkedin });
 }
 
 exports.all = async (req, res) => {
@@ -63,8 +62,8 @@ exports.all = async (req, res) => {
 
   const paginatedSpeaker = await paginate(SpeakerSchema, page, itemsPerPage, {}, { createdAt: '-1' })
 
-  const speakers = paginatedSpeaker.documents.map(({ id, speakerImage, name, position, description, facebook, twitter, status }) => {
-    return { id, speakerImage, name, position, description, facebook, twitter, status }
+  const speakers = paginatedSpeaker.documents.map(({ id, speakerImage, name, position, description, facebook, twitter,linkedin, status }) => {
+    return { id, speakerImage, name, position, description, facebook, twitter,linkedin, status }
   })
   res.json({ speakers, pagination: paginatedSpeaker.pagination });
 };
@@ -79,5 +78,5 @@ exports.remove = async (req, res) => {
 
   await SpeakerSchema.findByIdAndDelete(id)
 
-  res.json({ message: "Speaker removed successfully" });
+  res.json({ success:true, message: "Speaker removed successfully" });
 }

@@ -1,20 +1,21 @@
-const express = require("express")
+const express = require("express");
 
-const dashboardRoute = require("./dashboard")
-const adminRoute = require("./admin")
-const blogRoute = require("./blog")
-const categoryRoute = require("./category")
-const speakerRoute = require("./speaker")
-const termsRoute = require("./terms")
-const privacyRoute = require("./privacy")
-const contactRequestRoute = require("./contactRequest")
-const resourceRoute = require("./resource")
-const teamRoute = require("./team")
-const sponsorRoute = require("./sponsor")
-const workshopRoute = require("./workshop")
-const prizeRoute = require("./prize")
+const dashboardRoute = require("./dashboard");
+const adminRoute = require("./admin");
+const blogRoute = require("./blog");
+const categoryRoute = require("./category");
+const speakerRoute = require("./speaker");
+const termsRoute = require("./terms");
+const privacyRoute = require("./privacy");
+const contactRequestRoute = require("./contactRequest");
+const resourceRoute = require("./resource");
+const teamRoute = require("./team");
+const roleRoute = require("./role");
+const sponsorRoute = require("./sponsor");
+const workshopRoute = require("./workshop");
+const prizeRoute = require("./prize");
 
-const frontendRoute = require("./frontend")
+const frontendRoute = require("./frontend");
 
 const router = express.Router();
 
@@ -36,6 +37,7 @@ router.use("/privacy", privacyRoute);
 router.use("/contact-request", contactRequestRoute);
 router.use("/resource", resourceRoute);
 router.use("/team", teamRoute);
+router.use("/role", roleRoute);
 router.use("/sponsor", sponsorRoute);
 router.use("/workshop", workshopRoute);
 router.use("/prize", prizeRoute);
