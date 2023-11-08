@@ -9,7 +9,7 @@ exports.members = async (req, res) => {
     1,
     0,
     { status: "Published" },
-    { createdAt: "-1" }
+    { role: "1", leader: "-1" }
   );
   const members = await Promise.all(
     paginatedMembers.documents.map(async (member) => {
@@ -33,9 +33,8 @@ exports.members = async (req, res) => {
     1,
     0,
     { status: "Published" },
-    { createdAt: "-1" }
+    { level: "1" }
   );
-  console.log(paginatedRoles);
 
   const roles = await Promise.all(
     paginatedRoles.documents.map(async (role) => {

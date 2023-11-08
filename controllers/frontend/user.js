@@ -18,14 +18,40 @@ exports.findOrCreate = async (req, res) => {
   // if user already exists send token and user info
   if (oldUser) {
     const token = jwt.sign({ userId: oldUser._id }, process.env.app_jwt_secret);
+    const { id, name, email, userImage, workshops: works } = oldUser;
+    // destructure workshops
+    const workshops = await Promise.all(
+      works.map(async (workshop) => {
+        const {
+          id,
+          title,
+          workshopImage,
+          description,
+          status,
+          createdAt,
+          updatedAt,
+        } = workshop;
+        return {
+          id,
+          title,
+          workshopImage,
+          description,
+          status,
+          createdAt,
+          updatedAt,
+        };
+      })
+    );
+
     return res.json({
       token,
+      test: "test",
       user: {
-        id: oldUser.id,
-        name: oldUser.name,
-        email: oldUser.email,
-        userImage: oldUser.userImage,
-        workshops: oldUser.workshops,
+        id,
+        name,
+        email,
+        userImage,
+        workshops,
       },
     });
   }
@@ -75,21 +101,47 @@ exports.findOrCreate = async (req, res) => {
   return res.json({ token, user: { id, name, email, userImage, workshops } });
 };
 
-exports.isAuthRes = async (req, res) => {
+exports.isUserRes = async (req, res) => {
   const { user } = req;
-  const { id, name, email, role } = user;
+  await user.populate({ path: "workshops", select: "id title workshopImage" });
+  const { id, name, email, userImage, workshops: works } = user;
+  // destructure workshops
+  const workshops = await Promise.all(
+    works.map(async (workshop) => {
+      const {
+        id,
+        title,
+        workshopImage,
+        description,
+        status,
+        createdAt,
+        updatedAt,
+      } = workshop;
+      return {
+        id,
+        title,
+        workshopImage,
+        description,
+        status,
+        createdAt,
+        updatedAt,
+      };
+    })
+  );
   res.json({
     user: {
       id,
       name,
       email,
-      role,
+      userImage,
+      workshops,
     },
   });
 };
 
 exports.registerWorkshop = async (req, res) => {
   const { workshopId, email } = req.body;
+  console.log(workshopId);
 
   if (!isValidObjectId(workshopId)) return sendError(res, "Invalid workshop");
 

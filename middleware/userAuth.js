@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { sendError } = require("../utils/error");
 const UserSchema = require("../models/user");
 
-exports.isAuth = async (req, res, next) => {
+exports.isUser = async (req, res, next) => {
   const authHeader = req.headers?.authorization;
   if (!authHeader) return sendError(res, "Invalid token");
 
