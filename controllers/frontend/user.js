@@ -9,6 +9,10 @@ const { isValidObjectId } = require("mongoose");
 
 exports.findOrCreate = async (req, res) => {
   const { name, email, image } = req.body;
+  const { authorization } = req.headers;
+  console.log(image);
+  if (!email) return sendError(res, "Email Address is required");
+
   // console.log(req);
 
   const oldUser = await UserSchema.findOne({ email }).populate({
@@ -45,7 +49,6 @@ exports.findOrCreate = async (req, res) => {
 
     return res.json({
       token,
-      test: "test",
       user: {
         id,
         name,
@@ -96,7 +99,7 @@ exports.findOrCreate = async (req, res) => {
   };
   // if new user then create user and send token
   const user = new UserSchema({ name, email, userImage });
-  const { id } = await user.save();
+  const { id, workshops } = await user.save();
   const token = jwt.sign({ userId: id }, process.env.app_jwt_secret);
   return res.json({ token, user: { id, name, email, userImage, workshops } });
 };

@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const AdminSchema = require("../models/admin");
 const { sendError } = require("../utils/error");
+const { paginate } = require("../utils/paginate");
+const { isValidObjectId } = require("mongoose");
 
 exports.create = async (req, res) => {
   // test for now
@@ -81,4 +83,38 @@ exports.userMigration = async (req, res) => {
 
   await admin.save();
   res.status(200).json("User Migration complete");
+};
+
+exports.all = async (req, res) => {
+  const itemsPerPage =
+    parseInt(req.query.per_page) === -1
+      ? 0
+      : parseInt(req.query.per_page) || 10;
+  const page = parseInt(req.query.page) || 0;
+
+  const paginatedAdmin = await paginate(
+    AdminSchema,
+    page,
+    itemsPerPage,
+    {},
+    { createdAt: "-1" }
+  );
+
+  const admins = paginatedAdmin.documents.map(({ id, name, email }) => {
+    return { id, name, email };
+  });
+  res.json({ admins, pagination: paginatedAdmin.pagination });
+};
+
+exports.remove = async (req, res) => {
+  const { id } = req.params;
+
+  if (!isValidObjectId(id)) return sendError(res, "Invalid Admin ID");
+
+  const admin = AdminSchema.findById(id);
+  if (!admin) return sendError(res, "Admin not found", 404);
+
+  await AdminSchema.findByIdAndDelete(id);
+
+  res.json({ message: "Admin removed successfully" });
 };
