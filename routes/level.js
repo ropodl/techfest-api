@@ -7,10 +7,10 @@ const {
   all,
   update,
   sponsorLevel,
-} = require("../controllers/sponsorLevel");
+} = require("../controllers/level");
 const {
   sponsorLevelValidator,
-} = require("../middleware/validator/sponsorLevel");
+} = require("../middleware/validator/level");
 const { validate } = require("../middleware/validator/validate");
 
 const router = express.Router();

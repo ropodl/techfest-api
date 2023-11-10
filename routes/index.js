@@ -12,7 +12,7 @@ const resourceRoute = require("./resource");
 const teamRoute = require("./team");
 const roleRoute = require("./role");
 const sponsorRoute = require("./sponsor");
-const sponsorLevelRoute = require("./sponsorLevel");
+const sponsorLevelRoute = require("./level");
 const workshopRoute = require("./workshop");
 const prizeRoute = require("./prize");
 

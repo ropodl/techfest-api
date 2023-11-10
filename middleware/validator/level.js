@@ -7,7 +7,7 @@ exports.sponsorLevelValidator = [
     .withMessage("Sponsor Level title is missing")
     .isLength({ min: 3 })
     .withMessage("Minimum title length must be 3"),
-  check("level")
+  check("priority")
     .trim()
     .notEmpty()
     .withMessage("Sponsor Level Priority Number is missing")

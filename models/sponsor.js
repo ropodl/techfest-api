@@ -10,10 +10,10 @@ const sponsorSchema = mongoose.Schema(
       required: true,
     },
     link: { type: String, trim: true },
-    description: { type: String, trim: true, required: true },
+    description: { type: String, trim: true },
     status: { type: String, required: true, enum: ["Draft", "Published"] },
   },
-  { timestamps: true, unique: ["level"] }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Sponsor", sponsorSchema);

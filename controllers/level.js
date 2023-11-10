@@ -1,15 +1,21 @@
 const { isValidObjectId } = require("mongoose");
-const SponsorLevelSchema = require("../models/sponsorLevel");
+const SponsorLevelSchema = require("../models/level");
 const { paginate } = require("../utils/paginate");
 const { sendError } = require("../utils/error");
 
 exports.create = async (req, res) => {
-  const { title, level, status } = req.body;
+  const { title, priority, status } = req.body;
 
-  const oldLevel = await SponsorLevelSchema.findOne({ level });
+  console.log(req.body);
+
+  const oldLevel = await SponsorLevelSchema.findOne({ priority });
   if (oldLevel) return sendError(res, "Level already exists");
 
-  const sponsorLevel = new SponsorLevelSchema({ title, level, status });
+  const sponsorLevel = new SponsorLevelSchema({
+    title,
+    priority,
+    status,
+  });
 
   const { id } = await sponsorLevel.save();
 
@@ -21,7 +27,7 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const { title, level, status } = req.body;
+  const { title, priority, status } = req.body;
 
   if (!isValidObjectId(id)) return sendError(res, "Sponsor Level ID not valid");
 
@@ -29,7 +35,7 @@ exports.update = async (req, res) => {
   if (!sponsorLevel) return sendError(res, "Sponsor Level not found", 404);
 
   speaker.title = title;
-  speaker.level = level;
+  speaker.priority = priority;
   speaker.status = status;
 
   await sponsorLevel.save();
@@ -40,16 +46,18 @@ exports.update = async (req, res) => {
 exports.sponsorLevel = async (req, res) => {
   const { id } = req.params;
 
+  if (!isValidObjectId(id)) return sendError(res, "Sponsor Level ID not valid");
+
   const sponsorLevel = await SponsorLevelSchema.findOne({ _id: id });
   if (!sponsorLevel)
     return sendError(res, "Invalid request, Sponsor Level not found", 404);
 
-  const { _id, title, level, status } = speaker;
+  const { _id, title, priority, status } = sponsorLevel;
 
   res.json({
     id: _id,
     title,
-    level,
+    priority,
     status,
   });
 };
@@ -70,11 +78,11 @@ exports.all = async (req, res) => {
   );
 
   const levels = paginatedSponsor.documents.map(
-    ({ id, title, level, status }) => {
+    ({ id, title, priority, status }) => {
       return {
         id,
         title,
-        level,
+        priority,
         status,
       };
     }

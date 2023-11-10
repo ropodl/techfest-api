@@ -1,18 +1,14 @@
 const { isValidObjectId } = require("mongoose");
 const SponsorSchema = require("../models/sponsor");
 const { paginate } = require("../utils/paginate");
+const { ImgUrl } = require("../utils/generateImgUrl");
 
 exports.create = async (req, res) => {
   const { name, level, link, description, status } = req.body;
   const { file } = req;
 
   const sponsorImage = {
-    url:
-      (process.env.app_dev ? "http://" : "https://") +
-      req.hostname +
-      (process.env.app_port ? `:${process.env.app_port}` : "") +
-      "/" +
-      file.path,
+    url: ImgUrl(req, res, file),
     name: file.filename,
   };
 
@@ -48,12 +44,7 @@ exports.update = async (req, res) => {
 
   if (file)
     sponsor.sponsorImage = {
-      url:
-        (process.env.app_dev ? "http://" : "https://") +
-        req.hostname +
-        (process.env.app_port ? `:${process.env.app_port}` : "") +
-        "/" +
-        file.path,
+      url: ImgUrl(req, res, file),
       name: file.filename,
     };
 
@@ -89,7 +80,7 @@ exports.all = async (req, res) => {
 
   const sponsors = await Promise.all(
     paginatedSponsor.documents.map(async (sponsor) => {
-      await sponsor.populate({ path: "level", select: "title level" });
+      await sponsor.populate({ path: "level", select: "title priority" });
       const { id, name, sponsorImage, level, link, description, status } =
         sponsor;
       return { id, name, sponsorImage, level, link, description, status };

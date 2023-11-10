@@ -1,7 +1,7 @@
 const PrizeSchema = require("../../models/prize");
 const SpeakerSchema = require("../../models/speaker");
 const WorkshopSchema = require("../../models/workshop");
-const SponsorLevelSchema = require("../../models/sponsorLevel");
+const SponsorLevelSchema = require("../../models/level");
 const SponsorSchema = require("../../models/sponsor");
 const { paginate } = require("../../utils/paginate");
 
@@ -61,19 +61,20 @@ exports.home = async (req, res) => {
     1,
     0,
     { status: "Published" },
-    { createdAt: "-1" }
+    { priority: "1" }
   );
   const levels = await Promise.all(
     paginatedLevels.documents.map(async (item) => {
-      const { title, level } = item;
-      return { title, level };
+      const count = await SponsorSchema.countDocuments({ level: item });
+      const { title, priority } = item;
+      return { title, priority, count };
     })
   );
   // Sponsors
   const paginatedSponsors = await paginate(
     SponsorSchema,
     1,
-    -1,
+    0,
     { status: "Published" },
     { createdAt: "-1" }
   );
