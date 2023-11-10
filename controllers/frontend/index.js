@@ -1,6 +1,8 @@
 const PrizeSchema = require("../../models/prize");
 const SpeakerSchema = require("../../models/speaker");
 const WorkshopSchema = require("../../models/workshop");
+const SponsorLevelSchema = require("../../models/sponsorLevel");
+const SponsorSchema = require("../../models/sponsor");
 const { paginate } = require("../../utils/paginate");
 
 exports.home = async (req, res) => {
@@ -53,5 +55,35 @@ exports.home = async (req, res) => {
       };
     })
   );
-  res.json({ prizes, speakers });
+  // Sponsors Levels
+  const paginatedLevels = await paginate(
+    SponsorLevelSchema,
+    1,
+    0,
+    { status: "Published" },
+    { createdAt: "-1" }
+  );
+  const levels = await Promise.all(
+    paginatedLevels.documents.map(async (item) => {
+      const { title, level } = item;
+      return { title, level };
+    })
+  );
+  // Sponsors
+  const paginatedSponsors = await paginate(
+    SponsorSchema,
+    1,
+    -1,
+    { status: "Published" },
+    { createdAt: "-1" }
+  );
+  const sponsors = await Promise.all(
+    paginatedSponsors.documents.map(async (sponsor) => {
+      await sponsor.populate({ path: "level", select: "title level" });
+      const { name, sponsorImage, level, link, description } = sponsor;
+      return { name, sponsorImage, level, link, description };
+    })
+  );
+  // Response
+  res.json({ prizes, speakers, levels, sponsors });
 };

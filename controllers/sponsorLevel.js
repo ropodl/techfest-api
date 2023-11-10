@@ -1,10 +1,13 @@
 const { isValidObjectId } = require("mongoose");
-const SponsorLevelSchema = require("../models/sponsorlevel");
+const SponsorLevelSchema = require("../models/sponsorLevel");
 const { paginate } = require("../utils/paginate");
 const { sendError } = require("../utils/error");
 
 exports.create = async (req, res) => {
   const { title, level, status } = req.body;
+
+  const oldLevel = await SponsorLevelSchema.findOne({ level });
+  if (oldLevel) return sendError(res, "Level already exists");
 
   const sponsorLevel = new SponsorLevelSchema({ title, level, status });
 
@@ -66,7 +69,7 @@ exports.all = async (req, res) => {
     { createdAt: "-1" }
   );
 
-  const sponsorLevels = paginatedSponsor.documents.map(
+  const levels = paginatedSponsor.documents.map(
     ({ id, title, level, status }) => {
       return {
         id,
@@ -76,7 +79,7 @@ exports.all = async (req, res) => {
       };
     }
   );
-  res.json({ sponsorLevels, pagination: paginatedSponsor.pagination });
+  res.json({ levels, pagination: paginatedSponsor.pagination });
 };
 
 exports.remove = async (req, res) => {
