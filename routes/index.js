@@ -15,6 +15,7 @@ const sponsorRoute = require("./sponsor");
 const sponsorLevelRoute = require("./level");
 const workshopRoute = require("./workshop");
 const prizeRoute = require("./prize");
+const faqRoute = require("./faq");
 
 const frontendRoute = require("./frontend");
 
@@ -43,5 +44,6 @@ router.use("/sponsor", sponsorRoute);
 router.use("/sponsor-level", sponsorLevelRoute);
 router.use("/workshop", workshopRoute);
 router.use("/prize", prizeRoute);
+router.use("/faq", faqRoute);
 
 module.exports = router;
