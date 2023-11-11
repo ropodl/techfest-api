@@ -79,7 +79,7 @@ exports.update = async (req, res) => {
 
   if (file)
     blog.featuredImage = {
-      url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,,
+      url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
       name: file.filename,
     };
 
