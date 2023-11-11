@@ -16,12 +16,7 @@ exports.create = async (req, res) => {
   }
 
   const memberImage = {
-    url:
-      (process.env.app_dev ? "http://" : "https://") +
-      req.hostname +
-      (process.env.app_port ? `:${process.env.app_port}` : "") +
-      "/" +
-      file.path,
+    url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
     name: file.filename,
   };
 
@@ -69,11 +64,7 @@ exports.update = async (req, res) => {
   if (file)
     team.memberImage = {
       url:
-        (process.env.app_dev ? "http://" : "https://") +
-        req.hostname +
-        (process.env.app_port ? `:${process.env.app_port}` : "") +
-        "/" +
-        file.path,
+      (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
       name: file.filename,
     };
 

@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
     if (!file) return sendError(res, "Image not uploaded");
 
     const workshopImage = {
-        url: (process.env.app_dev ? "http://" : "https://") + req.hostname + (process.env.app_port ? `:${process.env.app_port}` : '') + "/" + file.path,
+        url: (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
         name: file.filename
     };
 
@@ -40,7 +40,7 @@ exports.update = async (req, res) => {
     workshop.status = status;
 
     if (file) workshop.workshopImage = {
-        url: (process.env.app_dev ? "http://" : "https://") + req.hostname + (process.env.app_port ? `:${process.env.app_port}` : '') + "/" + file.path,
+        url: (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
         name: file.filename
     };
 

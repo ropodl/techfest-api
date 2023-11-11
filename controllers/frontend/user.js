@@ -90,11 +90,7 @@ exports.findOrCreate = async (req, res) => {
   downloadImage(image, filePath);
   const userImage = {
     url:
-      (process.env.app_dev ? "http://" : "https://") +
-      req.hostname +
-      (process.env.app_port ? `:${process.env.app_port}` : "") +
-      "/" +
-      filePath,
+    (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
     name: fileName,
   };
   // if new user then create user and send token
