@@ -14,6 +14,7 @@ const roleRoute = require("./role");
 const sponsorRoute = require("./sponsor");
 const sponsorLevelRoute = require("./level");
 const workshopRoute = require("./workshop");
+const eventRoute = require("./event");
 const prizeRoute = require("./prize");
 const faqRoute = require("./faq");
 
@@ -43,6 +44,7 @@ router.use("/role", roleRoute);
 router.use("/sponsor", sponsorRoute);
 router.use("/sponsor-level", sponsorLevelRoute);
 router.use("/workshop", workshopRoute);
+router.use("/event", eventRoute);
 router.use("/prize", prizeRoute);
 router.use("/faq", faqRoute);
 

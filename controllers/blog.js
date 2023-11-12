@@ -38,16 +38,9 @@ exports.create = async (req, res) => {
   await blog.save();
 
   res.json({
+    slug,
     success: true,
-    blog: {
-      title,
-      content,
-      excerpt,
-      status,
-      slug,
-      featuredImage,
-      categories,
-    },
+    message: "Blog added Successfully",
   });
 };
 
@@ -79,7 +72,7 @@ exports.update = async (req, res) => {
 
   if (file)
     blog.featuredImage = {
-      url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+      url: ImgUrl(req, res, file),
       name: file.filename,
     };
 
@@ -171,9 +164,4 @@ exports.removeBulk = async (req, res) => {
     }
   }
   res.json({ message: "Multiple Blogs Deleted" });
-};
-
-exports.search = async (req, res) => {
-  const { title } = req.body;
-  console.log(title);
 };

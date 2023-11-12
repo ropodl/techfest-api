@@ -2,6 +2,7 @@ const { isValidObjectId } = require("mongoose");
 const SpeakerSchema = require("../models/speaker");
 const { paginate } = require("../utils/paginate");
 const { sendError } = require("../utils/error");
+const { ImgUrl } = require("../utils/generateImgUrl");
 
 exports.create = async (req, res) => {
   const { name, position, description, facebook, twitter, linkedin, status } =
@@ -9,7 +10,7 @@ exports.create = async (req, res) => {
   const { file } = req;
 
   let speakerImage = {
-    url: (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+    url: ImgUrl(req, res, file),
     name: file.filename,
   };
 
@@ -37,6 +38,7 @@ exports.update = async (req, res) => {
   const { name, position, description, facebook, twitter, linkedin, status } =
     req.body;
   const { id } = req.params;
+  const { file } = req;
 
   if (!isValidObjectId(id)) return sendError(res, "Speaker ID not valid");
 
@@ -50,6 +52,12 @@ exports.update = async (req, res) => {
   speaker.twitter = twitter;
   speaker.linkedin = linkedin;
   speaker.status = status;
+
+  if (file)
+    speaker.speakerImage = {
+      url: ImgUrl(req, res, file),
+      name: file.filename,
+    };
 
   await speaker.save();
 

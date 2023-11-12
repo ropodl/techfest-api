@@ -2,13 +2,14 @@ const { isValidObjectId } = require("mongoose");
 const PrizeSchema = require("../models/prize");
 const { sendError } = require("../utils/error");
 const { paginate } = require("../utils/paginate");
+const { ImgUrl } = require("../utils/generateImgUrl");
 
 exports.create = async (req, res) => {
   const { title, description, status } = req.body;
   const { file } = req;
 
   const prizeImage = {
-    url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+    url: ImgUrl(req, res, file),
     name: file.filename,
   };
 
@@ -17,9 +18,9 @@ exports.create = async (req, res) => {
   const { id } = await prize.save();
 
   res.json({
+    id,
     success: true,
     message: "Prize Added Successfully",
-    id,
   });
 };
 
@@ -39,7 +40,7 @@ exports.update = async (req, res) => {
 
   if (file)
     prize.prizeImage = {
-      url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+      url: ImgUrl(req, res, file),
       name: file.filename,
     };
 

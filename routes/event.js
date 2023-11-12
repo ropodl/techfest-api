@@ -4,15 +4,13 @@ const { isAuth, isAdmin } = require("../middleware/auth");
 const {
   create,
   remove,
-  blog,
+  event,
   all,
-  search,
   removeBulk,
   update,
-} = require("../controllers/blog");
+} = require("../controllers/event");
 const { uploadImage } = require("../middleware/multer");
 
-const { blogValidator } = require("../middleware/validator/blog");
 const { validate } = require("../middleware/validator/validate");
 
 const router = express.Router();
@@ -22,7 +20,6 @@ router.post(
   uploadImage.single("image"),
   isAuth,
   isAdmin,
-  blogValidator,
   validate,
   create
 );
@@ -37,7 +34,7 @@ router.patch(
 );
 
 router.get("/", all);
-router.get("/:slug", blog);
+router.get("/:id", event);
 
 router.delete("/delete-bulk", isAuth, isAdmin, removeBulk);
 router.delete("/:id", isAuth, isAdmin, remove);

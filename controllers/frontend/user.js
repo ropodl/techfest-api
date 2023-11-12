@@ -6,6 +6,7 @@ const { sendError } = require("../../utils/error");
 
 const UserSchema = require("../../models/user");
 const { isValidObjectId } = require("mongoose");
+const { ImgUrl } = require("../../utils/generateImgUrl");
 
 exports.findOrCreate = async (req, res) => {
   const { name, email, image } = req.body;
@@ -89,8 +90,7 @@ exports.findOrCreate = async (req, res) => {
   }
   downloadImage(image, filePath);
   const userImage = {
-    url:
-    (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+    url: ImgUrl(req, res, file),
     name: fileName,
   };
   // if new user then create user and send token

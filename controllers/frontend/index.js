@@ -10,7 +10,7 @@ exports.home = async (req, res) => {
   const paginatedPrize = await paginate(
     PrizeSchema,
     1,
-    4,
+    0,
     { status: "Published" },
     { createdAt: "-1" }
   );
@@ -29,7 +29,7 @@ exports.home = async (req, res) => {
   const paginatedSpeakers = await paginate(
     SpeakerSchema,
     1,
-    4,
+    0,
     { status: "Published" },
     { createdAt: "-1" }
   );

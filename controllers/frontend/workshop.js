@@ -11,10 +11,11 @@ exports.workshop = async (req, res) => {
   );
   const workshops = await Promise.all(
     paginatedWorkshop.documents.map(async (workshop) => {
-      const { id, title, workshopImage, description } = workshop;
+      const { id, title, link, workshopImage, description } = workshop;
       return {
         id,
         title,
+        link,
         workshopImage,
         description,
       };

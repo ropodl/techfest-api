@@ -4,6 +4,7 @@ const TeamSchema = require("../models/team");
 
 const { sendError } = require("../utils/error");
 const { paginate } = require("../utils/paginate");
+const { ImgUrl } = require("../utils/generateImgUrl");
 
 exports.create = async (req, res) => {
   const { name, email, phone, role, leader, description, status } = req.body;
@@ -16,7 +17,7 @@ exports.create = async (req, res) => {
   }
 
   const memberImage = {
-    url:(process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+    url: ImgUrl(req, res, file),
     name: file.filename,
   };
 
@@ -63,8 +64,7 @@ exports.update = async (req, res) => {
 
   if (file)
     team.memberImage = {
-      url:
-      (process.env.app_dev == "true" ? "http://" : "https://") + req.hostname + (process.env.app_dev == "true" ? `:${process.env.app_port}` : "") + "/" +file.path,
+      url: ImgUrl(req, res, file),
       name: file.filename,
     };
 
@@ -150,18 +150,18 @@ exports.remove = async (req, res) => {
   res.json({ success: true, message: "Team Member removed successfully" });
 };
 
-// exports.removeBulk = async (req, res) => {
-//     const { ids } = req.body;
-//     console.log(ids);
-//     if (ids) {
-//         for (id of ids) {
-//             if (!isValidObjectId(id)) return sendError(res, "Invalid Blog ID")
+exports.removeBulk = async (req, res) => {
+  const { ids } = req.body;
+  console.log(ids);
+  if (ids) {
+    for (id of ids) {
+      if (!isValidObjectId(id)) return sendError(res, "Invalid Team ID");
 
-//             const blog = TeamSchema.findById(id)
-//             if (!blog) return sendError(res, "Blog not found", 404);
+      const team = TeamSchema.findById(id);
+      if (!team) return sendError(res, "Team not found", 404);
 
-//             await TeamSchema.findByIdAndDelete(id)
-//         }
-//     }
-//     res.json({ message: "Multiple Blogs Deleted" })
-// }
+      await TeamSchema.findByIdAndDelete(id);
+    }
+  }
+  res.json({ message: "Multiple Team Deleted" });
+};
