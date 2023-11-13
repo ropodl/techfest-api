@@ -38,11 +38,13 @@ exports.members = async (req, res) => {
 
   const roles = await Promise.all(
     paginatedRoles.documents.map(async (role) => {
+      const count = await TeamSchema.countDocuments({ role: role });
       const { id, title, level } = role;
       return {
         id,
         title,
         level,
+        count,
       };
     })
   );
