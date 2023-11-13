@@ -27,14 +27,11 @@ exports.blogs = async (req, res) => {
 exports.blog = async (req, res) => {
   const { slug } = req.params;
 
-  const blog = await BlogSchema.findOne({ slug }).populate({
-    path: "categories",
-    select: ["title slug"],
-  });
+  const blog = await BlogSchema.findOne({ slug });
   if (!blog) return sendError(res, "Invalid request, Blog not found", 404);
 
-  const { title, excerpt, content, featuredImage, categories, createdAt } =
+  const { title, excerpt, content, featuredImage, createdAt } =
     blog;
 
-  res.json({ title, excerpt, content, featuredImage, categories, createdAt });
+  res.json({ title, excerpt, content, featuredImage, createdAt });
 };

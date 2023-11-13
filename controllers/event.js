@@ -20,6 +20,7 @@ exports.create = async (req, res) => {
     description,
     eventImage,
     link,
+
     status,
   });
 

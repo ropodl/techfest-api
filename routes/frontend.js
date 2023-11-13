@@ -13,6 +13,7 @@ const { members } = require("../controllers/frontend/member");
 const { uploadImage } = require("../middleware/multer");
 const { isUser } = require("../middleware/userAuth");
 const { faqs } = require("../controllers/frontend/faq");
+const { event, events } = require("../controllers/frontend/event");
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.get("/home", home);
 
 router.get("/blog", blogs);
 router.get("/blog/:slug", blog);
+router.get("/event", events);
 router.get("/workshop", workshop);
 router.get("/team", members);
 router.get("/faqs", faqs);
