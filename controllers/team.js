@@ -10,10 +10,20 @@ exports.create = async (req, res) => {
   const { name, email, phone, role, leader, description, status } = req.body;
   const { file } = req;
 
-  if (leader == true) {
-    const isLeader = await TeamSchema.findOne({ leader: true, role });
-    if (isLeader)
-      return sendError(res, "Someone else already the leader in this role");
+  if (leader === "true") {
+    const leaders = await TeamSchema.find({ leader: true }).populate({
+      path: "role",
+      select: "title",
+    });
+    for (item of leaders) {
+      if (item.role.id === role) {
+        return sendError(
+          res,
+          "Someone else already the leader in this role",
+          400
+        );
+      }
+    }
   }
 
   const memberImage = {
@@ -53,6 +63,22 @@ exports.update = async (req, res) => {
 
   const team = await TeamSchema.findById(id);
   if (!team) return sendError(res, "Team Member not found", 404);
+
+  if (leader === "true") {
+    const leaders = await TeamSchema.find({ leader: true }).populate({
+      path: "role",
+      select: "title",
+    });
+    for (item of leaders) {
+      if (item.role.id === role) {
+        return sendError(
+          res,
+          "Someone else already the leader in this role",
+          400
+        );
+      }
+    }
+  }
 
   team.name = name;
   team.email = email;
@@ -155,13 +181,13 @@ exports.removeBulk = async (req, res) => {
   console.log(ids);
   if (ids) {
     for (id of ids) {
-      if (!isValidObjectId(id)) return sendError(res, "Invalid Team ID");
+      if (!isValidObjectId(id)) return sendError(res, "Invalid Team Member ID");
 
       const team = TeamSchema.findById(id);
-      if (!team) return sendError(res, "Team not found", 404);
+      if (!team) return sendError(res, "Team Member not found", 404);
 
       await TeamSchema.findByIdAndDelete(id);
     }
   }
-  res.json({ message: "Multiple Team Deleted" });
+  res.json({ message: "Multiple Team Member Deleted" });
 };

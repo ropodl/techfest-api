@@ -1,6 +1,5 @@
 const PrizeSchema = require("../../models/prize");
 const SpeakerSchema = require("../../models/speaker");
-const WorkshopSchema = require("../../models/workshop");
 const SponsorLevelSchema = require("../../models/level");
 const SponsorSchema = require("../../models/sponsor");
 const { paginate } = require("../../utils/paginate");
@@ -43,6 +42,7 @@ exports.home = async (req, res) => {
         speakerImage,
         facebook,
         twitter,
+        linkedin,
       } = speaker;
       return {
         id,
@@ -52,6 +52,7 @@ exports.home = async (req, res) => {
         speakerImage,
         facebook,
         twitter,
+        linkedin,
       };
     })
   );
