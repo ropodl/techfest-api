@@ -6,7 +6,7 @@ const {
   isUserRes,
 } = require("../controllers/frontend/user");
 const { home } = require("../controllers/frontend");
-const { workshop } = require("../controllers/frontend/workshop");
+const { workshop, workshops } = require("../controllers/frontend/workshop");
 const { blog, blogs } = require("../controllers/frontend/blog");
 const { members } = require("../controllers/frontend/member");
 
@@ -22,7 +22,9 @@ router.get("/home", home);
 router.get("/blog", blogs);
 router.get("/blog/:slug", blog);
 router.get("/event", events);
-router.get("/workshop", workshop);
+router.get("/event/:id", event);
+router.get("/workshop", workshops);
+router.get("/workshop/:id", workshop);
 router.get("/team", members);
 router.get("/faqs", faqs);
 
