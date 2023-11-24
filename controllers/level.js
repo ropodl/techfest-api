@@ -6,8 +6,6 @@ const { sendError } = require("../utils/error");
 exports.create = async (req, res) => {
   const { title, priority, status } = req.body;
 
-  console.log(req.body);
-
   const oldLevel = await SponsorLevelSchema.findOne({ priority });
   if (oldLevel) return sendError(res, "Level already exists");
 
@@ -27,6 +25,7 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
+  const { id } = req.params;
   const { title, priority, status } = req.body;
 
   if (!isValidObjectId(id)) return sendError(res, "Sponsor Level ID not valid");
@@ -34,9 +33,9 @@ exports.update = async (req, res) => {
   const sponsorLevel = await SponsorLevelSchema.findById(id);
   if (!sponsorLevel) return sendError(res, "Sponsor Level not found", 404);
 
-  speaker.title = title;
-  speaker.priority = priority;
-  speaker.status = status;
+  sponsorLevel.title = title;
+  sponsorLevel.priority = priority;
+  sponsorLevel.status = status;
 
   await sponsorLevel.save();
 
