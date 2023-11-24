@@ -1,4 +1,6 @@
 const BlogSchema = require("../models/blog");
+const WorkshopSchema = require("../models/workshop");
+const EventSchema = require("../models/event");
 const SpeakerSchema = require("../models/speaker");
 const SponsorSchema = require("../models/sponsor");
 const contactRequestSchema = require("../models/contactRequest");
@@ -41,8 +43,8 @@ exports.dashboard = async (req, res) => {
   const paginatedBlog = await paginate(
     BlogSchema,
     1,
-    5,
-    { status: "Published" },
+    3,
+    {},
     { createdAt: "-1" }
   );
   const blogs = await Promise.all(
@@ -57,9 +59,47 @@ exports.dashboard = async (req, res) => {
       };
     })
   );
+  //   Pre-Event Widget
+  const paginatedEvent = await paginate(
+    EventSchema,
+    1,
+    3,
+    {},
+    { createdAt: "-1" }
+  );
+  const events = await Promise.all(
+    paginatedEvent.documents.map(async (event) => {
+      const { id, title, eventImage } = event;
+      return {
+        id,
+        title,
+        eventImage,
+      };
+    })
+  );
+  //   workshop Widget
+  const paginatedWorkshop = await paginate(
+    WorkshopSchema,
+    1,
+    3,
+    {},
+    { createdAt: "-1" }
+  );
+  const workshops = await Promise.all(
+    paginatedWorkshop.documents.map(async (workshop) => {
+      const { id, title, workshopImage } = workshop;
+      return {
+        id,
+        title,
+        workshopImage,
+      };
+    })
+  );
 
   res.json({
     counter,
     blogs,
+    events,
+    workshops,
   });
 };
