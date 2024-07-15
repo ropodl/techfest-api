@@ -68,8 +68,8 @@ exports.all = async (req, res) => {
 
   const faqs = await Promise.all(
     paginatedFaq.documents.map(async (faq) => {
-      const { id, title, content } = faq;
-      return { id, title, content };
+      const { id, title, content,status } = faq;
+      return { id, title, content,status };
     })
   );
   res.json({ faqs, pagination: paginatedFaq.pagination });

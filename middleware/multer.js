@@ -36,13 +36,13 @@ const videoFileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
-const documentFileFilter = () => {
-    if (!file.mimetype.startsWith("document")) {
+const documentFileFilter = (req,file,cb) => {
+    if (!file.mimetype.startsWith("application/")) {
         cb("Supports only document files", false);
     }
     cb(null, true);
 }
 
-exports.uploadImage = multer({ storage, imageFileFilter, limits: { fieldSize: 1000000000 } });
-exports.uploadVideo = multer({ storage, videoFileFilter });
-exports.uploadDocument = multer({ storage, documentFileFilter });
+exports.uploadImage = multer({ storage, fileFilter: imageFileFilter, limits: { fileSize: 1000000000 } });
+exports.uploadVideo = multer({ storage, fileFilter: videoFileFilter, limits: { fileSize: 1000000000 } });
+exports.uploadDocument = multer({ storage, fileFilter: documentFileFilter, limits: { fileSize: 1000000000 } });

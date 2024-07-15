@@ -28,7 +28,7 @@ router.post(
 router.patch("/:id", isAuth, isAdmin, update);
 
 router.get("/", all);
-router.get("/:slug", sponsorLevel);
+router.get("/:id", sponsorLevel);
 
 // router.delete("/delete-bulk", isAuth, isAdmin, removeBulk);
 router.delete("/:id", isAuth, isAdmin, remove);
