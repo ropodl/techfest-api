@@ -78,6 +78,9 @@ exports.all = async (req, res) => {
       : parseInt(req.query.per_page) || 10;
   const page = parseInt(req.query.page) || 0;
 
+  console.log(itemsPerPage,"itemsPerPage")
+  console.log(page,"page")
+  
   const paginatedBlog = await paginate(
     BlogSchema,
     page,
@@ -85,6 +88,7 @@ exports.all = async (req, res) => {
     {},
     { createdAt: "-1" }
   );
+  console.log(paginatedBlog,"paginatedBlog")
 
   const blogs = await Promise.all(
     paginatedBlog.documents.map(async (blog) => {

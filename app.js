@@ -15,12 +15,16 @@ require("./config/db.js")
 
 const app = express();
 
+
+
 app.use("/uploads/", express.static('uploads'));
 app.use(cors());
 app.use(morgan("tiny"));
 app.use(express.json());
 app.use(helmet());
 app.use(compression({ level: 9 }))
+
+
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/api/v1', routes);

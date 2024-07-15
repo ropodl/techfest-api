@@ -30,6 +30,9 @@ exports.update = async (req, res) => {
 
   if (!isValidObjectId(id)) return sendError(res, "Sponsor Level ID not valid");
 
+  const oldLevel = await SponsorLevelSchema.findOne({ priority });
+  if (oldLevel) return sendError(res, "Level already exists");
+
   const sponsorLevel = await SponsorLevelSchema.findById(id);
   if (!sponsorLevel) return sendError(res, "Sponsor Level not found", 404);
 
@@ -44,6 +47,7 @@ exports.update = async (req, res) => {
 
 exports.sponsorLevel = async (req, res) => {
   const { id } = req.params;
+  console.log(req.params)
 
   if (!isValidObjectId(id)) return sendError(res, "Sponsor Level ID not valid");
 
